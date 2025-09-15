@@ -1,4 +1,5 @@
 import selenium.webdriver as webdriver
+import numpy as np
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 
