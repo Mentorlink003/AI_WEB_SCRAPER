@@ -4,25 +4,39 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
+
 def scrape_website(website):
     print("Launching Chrome Browser.....")
 
     options = Options()
-    options.add_argument("--headless")  # run without opening a window
-    options.add_argument("--disable-gpu")
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--no-sandbox")
+    options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
 
-    # ✅ Automatically fetches the correct driver for your Chrome version
+    # 🧠 Pretend to be a normal browser
+    options.add_argument(
+        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/141.0.0.0 Safari/537.36"
+    )
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
         driver.get(website)
-        print("Page loaded.....")
+        print("✅ Page loaded successfully!")
         html = driver.page_source
         return html
     finally:
         driver.quit()
+
 
 
 def extract_body_content(html_content):
