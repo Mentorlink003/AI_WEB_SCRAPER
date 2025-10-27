@@ -1,24 +1,28 @@
-import selenium.webdriver as webdriver
-import numpy as np
+from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 
 def scrape_website(website):
     print("Launching Chrome Browser.....")
 
+    options = Options()
+    options.add_argument("--headless")  # run in background (no GUI)
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
 
-    chrome_driver_path = r"D:\programs\AI_web_scraper\AI_Web_Scraper\chromedriver.exe"
-    options = webdriver.ChromeOptions()
-    driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
+    # Automatically handles ChromeDriver installation
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
         driver.get(website)
-        print("page loaded.....")
+        print("Page loaded.....")
         html = driver.page_source
-
         return html
     finally:
         driver.quit()
+
 
 def extract_body_content(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
@@ -26,6 +30,7 @@ def extract_body_content(html_content):
     if body_content:
         return str(body_content)
     return ""
+
 
 def clean_body_content(body_content):
     soup = BeautifulSoup(body_content, "html.parser")
@@ -40,7 +45,8 @@ def clean_body_content(body_content):
 
     return cleaned_content
 
+
 def split_dom_content(dom_content, max_length=6000):
-    return[
-        dom_content[i : i + max_length] for i in range(0, len(dom_content), max_length)
+    return [
+        dom_content[i: i + max_length] for i in range(0, len(dom_content), max_length)
     ]
