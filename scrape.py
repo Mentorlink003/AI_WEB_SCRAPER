@@ -8,11 +8,12 @@ def scrape_website(website):
     print("Launching Chrome Browser.....")
 
     options = Options()
-    options.add_argument("--headless")  # run in background (no GUI)
+    options.add_argument("--headless")  # run without opening a window
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    # Automatically handles ChromeDriver installation
+    # ✅ Automatically fetches the correct driver for your Chrome version
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
